@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ps">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PVP Store - د AI انځورونو او ویډیوګانو ګالري</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- NAV -->
+        <nav class="navbar">
+            <div class="brand">
+                <i class="fas fa-bolt"></i> PVP Store
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active" data-filter="all">اصلي</a>
+                <a href="#" data-filter="image">انځورونه</a>
+                <a href="#" data-filter="video">ویډیوګانې</a>
+                <button class="upload-btn" id="openUploadBtn">
+                    <i class="fas fa-plus"></i> اپلوډ
+                </button>
+            </div>
+        </nav>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="په عنوان، کټګورۍ یا پرامپټ کې ولټوئ..." />
+            </div>
+            <select id="categoryFilter">
+                <option value="">ټولې کټګورۍ</option>
+                <option value="طبیعت">طبیعت</option>
+                <option value="انځور">انځور</option>
+                <option value="سای-فای">سای-فای</option>
+                <option value="فانتزي">فانتزي</option>
+                <option value="تجریدي">تجریدي</option>
+                <option value="نور">نور</option>
+            </select>
+            <div class="filter-tabs">
+                <button class="active" data-filter="all">ټول</button>
+                <button data-filter="image">انځورونه</button>
+                <button data-filter="video">ویډیوګانې</button>
+            </div>
+        </div>
+
+        <!-- MASONRY GRID -->
+        <div id="gallery" class="masonry"></div>
+
+        <!-- MODAL (detail) -->
+        <div class="modal-overlay" id="detailModal">
+            <div class="modal-box">
+                <button class="modal-close" id="closeModal">&times;</button>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <!-- UPLOAD FORM -->
+        <div class="upload-overlay" id="uploadOverlay">
+            <div class="upload-panel">
+                <button class="close-upload" id="closeUpload">&times;</button>
+                <h2><i class="fas fa-cloud-upload-alt"></i> اپلوډ</h2>
+                <form id="uploadForm">
+                    <div class="radio-group">
+                        <label><input type="radio" name="type" value="image" checked /> انځور</label>
+                        <label><input type="radio" name="type" value="video" /> ویډیو</label>
+                    </div>
+
+                    <label>عنوان *</label>
+                    <input type="text" id="uploadTitle" placeholder="لکه: د سایبرپنک ښار" required />
+
+                    <label>کټګورۍ *</label>
+                    <select id="uploadCategory" required>
+                        <option value="">کټګورۍ وټاکئ</option>
+                        <option>طبیعت</option>
+                        <option>انځور</option>
+                        <option>سای-فای</option>
+                        <option>فانتزي</option>
+                        <option>تجریدي</option>
+                        <option>نور</option>
+                    </select>
+
+                    <label>پرامپټ *</label>
+                    <textarea id="uploadPrompt" placeholder="د AI پرامپټ دلته ولیکئ..." required></textarea>
+
+                    <label>د رسنۍ فایل *</label>
+                    <div class="file-input-wrap" id="fileDrop">
+                        <i class="fas fa-image" style="font-size:2rem; color:#aaa;"></i>
+                        <p style="margin:0.3rem 0;">کلیک یا کش کړئ</p>
+                        <input type="file" id="uploadFile" accept="image/*,video/*" />
+                        <div class="file-name" id="fileName">هیڅ فایل نه دی ټاکل شوی</div>
+                    </div>
+                    <div class="error-msg" id="uploadError">مهرباني وکړئ ټول ساحې او فایل ډک کړئ.</div>
+
+                    <button class="submit-btn" type="submit" id="submitUpload">
+                        <span id="submitText">خپور کړئ</span>
+                        <span id="submitSpinner" style="display:none;" class="spinner"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ADMIN TOGGLE & PANEL -->
+        <button class="admin-toggle" id="adminToggle">⚙️ اډمین</button>
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-box">
+                <h2>
+                    <span>🛡️ د اډمین پینل</span>
+                    <button class="admin-close" id="closeAdmin">&times;</button>
+                </h2>
+                <div class="admin-search">
+                    <input type="text" id="adminSearch" placeholder="پوسټونه ولټوئ..." />
+                    <button id="adminSearchBtn">لټون</button>
+                    <button id="adminRefreshBtn" style="background:#2d2d3f;">تازه کول</button>
+                </div>
+                <div id="adminTableWrap">
+                    <table>
+                        <thead>
+                            <tr><th>ډول</th><th>عنوان</th><th>کټګورۍ</th><th>عمل</th></tr>
+                        </thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="ads.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
